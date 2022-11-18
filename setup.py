@@ -1,5 +1,5 @@
 import os
-
+# Dynamixel Initialization
 if os.name == 'nt':
     import msvcrt
     def getch():
@@ -37,11 +37,64 @@ DXL1_ID                     = 1                 # Dynamixel#1 ID : 1
 DXL2_ID                     = 2                 # Dynamixel#1 ID : 2
 DXL3_ID                     = 3                 # Dynamixel#1 ID : 3
 DXL4_ID                     = 4                 # Dynamixel#1 ID : 4
-DXL5_ID                     = 5                 # Dynamixel#1 ID : 5
-DXL6_ID                     = 6                 # Dynamixel#1 ID : 6
 
 DEVICENAME                  = 'COM3'
 
 TORQUE_ENABLE               = 1                 # Value for enabling the torque
 TORQUE_DISABLE              = 0                 # Value for disabling the torque
 DXL_MOVING_STATUS_THRESHOLD = 20                # Dynamixel moving status threshold
+
+# Initialize PortHandler instance
+# Set the port path
+# Get methods and members of PortHandlerLinux or PortHandlerWindows
+portHandler = PortHandler(DEVICENAME)
+
+# Initialize PacketHandler instance
+# Set the protocol version
+# Get methods and members of Protocol1PacketHandler or Protocol2PacketHandler
+packetHandler = PacketHandler(PROTOCOL_VERSION)
+
+# Initialize GroupBulkWrite instance
+groupBulkWrite = GroupBulkWrite(portHandler, packetHandler)
+
+# Initialize GroupBulkRead instace for Present Position
+groupBulkRead = GroupBulkRead(portHandler, packetHandler)
+
+if portHandler.openPort():
+    print("Succeeded to open the port")
+else:
+    print("Failed to open the port")
+    print("Press any key to terminate...")
+    getch()
+    quit()
+
+
+# Set port baudrate
+if portHandler.setBaudRate(BAUDRATE):
+    print("Succeeded to change the baudrate")
+else:
+    print("Failed to change the baudrate")
+    print("Press any key to terminate...")
+    getch()
+    quit()
+
+# Enable Dynamixel Torque
+dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL1_ID, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
+if dxl_comm_result != COMM_SUCCESS:
+    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
+elif dxl_error != 0:
+    print("%s" % packetHandler.getRxPacketError(dxl_error))
+else:
+    print("Dynamixel#%d has been successfully connected" % DXL1_ID)
+
+dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL2_ID, ADDR_TORQUE_ENABLE, TORQUE_ENABLE)
+if dxl_comm_result != COMM_SUCCESS:
+    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
+elif dxl_error != 0:
+    print("%s" % packetHandler.getRxPacketError(dxl_error))
+else:
+    print("Dynamixel#%d has been successfully connected" % DXL2_ID)
+
+# Robot Initialization
+cur_jAng = [90, 90, 90, 90]
+target_jAng = [45, 45, 45, 45]
