@@ -1,6 +1,7 @@
 import os
 from robot_FK import *
 from robot_IK import *
+import time
 
 # Dynamixel Initialization
 if os.name == 'nt':
@@ -108,6 +109,8 @@ param_jAng = [[0] * 4] * len(DXL_ID) # 2D array for position val for each joint
 ball_pos = [200, 200]  # place holder
 ball_last_pos = ball_pos
 ball_dpos = [0, 0]
+# Position iterators
+dt = 0.01
 
 # Read Initial robot position
 dxl_comm_result = groupBulkRead.txRxPacket()

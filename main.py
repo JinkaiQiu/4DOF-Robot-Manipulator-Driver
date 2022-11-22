@@ -2,11 +2,17 @@ from setup import *
 while 1:
     if getch() == chr(0x1b): # ESC to break loop
         break
+    # CV Follower Version
     # read current ball pos in CV
-    # ball_pos = CV()
+    # ball_pos = CV_follower()
     ball_dpos = ball_pos - ball_last_pos
     rob_dpos = ball_dpos * ball2robCali
     rob_next_pos = rob_pos + rob_dpos
+
+    # Position Follower Version
+    start_t = time.time()
+    # rob_next_pos = position_follower(dt)
+
     target_jAng = ik(rob_next_pos)
     for i in range(len(DXL_ID)):
         # format each joint angle to byte array
@@ -47,7 +53,8 @@ while 1:
         if state == len(DXL_ID):
             break
     ball_last_pos = ball_pos
-
+    end_t = time.time()
+    dt = end_t - start_t
 ########################################################################################################################
 
 # Clear bulkread parameter storage
