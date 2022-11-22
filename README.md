@@ -1,4 +1,4 @@
 # MAE263A_PROJ
 The project is for Final Project for MAE 263A Kinematics of Robotics at UCLA
 
-Implementing a 4DOF ball tracking robot with OpenCV and dynamixel motors
+This branch is mainly for the simulation part of the project, including FK and IK analysis.
