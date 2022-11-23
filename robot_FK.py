@@ -42,7 +42,7 @@ def fk (jAng):
 if __name__ == '__main__':
     c = [0.087, 0.111, 0.078, 0.020] # Length Parameters of Manipulator
     jAng = [math.pi/6, -math.pi/2, math.pi/4, -math.pi]
-    pos = fk (jAng, c = [0.087, 0.111, 0.078, 0.020])
+    pos = fk (jAng)
     print(pos)
     print(type(pos))
     
