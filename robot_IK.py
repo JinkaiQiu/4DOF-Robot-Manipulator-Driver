@@ -1,8 +1,9 @@
 import numpy as np
 import math
 
-def ik (targXYZ, Mode, c):
+def ik (targXYZ, Mode):
     # input targXYZ = [x, y, z] m
+    global c
     L1 = c[0]; L2 = c[1]; L3 = c[2]; L4 = c[3]
     x = targXYZ[0]; y = targXYZ[1]; z = targXYZ[2]
 
@@ -47,16 +48,20 @@ def ik (targXYZ, Mode, c):
 
 
     jAng_temp = np.array([theta1, theta2, theta3, theta4])
+    jAng = np.round(jAng_temp / math.pi * 2048 + 2048)
     # output jAng = [t1, t2, t3, t4],  0 < t1,t2,t3,t4 < 4095
-    jAng = [float('{:.4f}'.format(i)) for i in jAng_temp]
-    # Assume jAng is angles within the range of [-pi, pi] <--> [0, 4095] ?
+    jAng = jAng.tolist()
+    # Assume jAng is angles within the range of [-pi, pi] <--> [0, 4095] ?    
+
     return jAng 
 
 
 # Test Only
 if __name__ == '__main__':
-    Mode = 2 # or 2
+    c = [0.087, 0.111, 0.078, 0.020] # Length Parameters of Manipulator
+    Mode = 1 # or 2
     targXYZ = np.array([0.15, 0, 0.08])
-    jAng = ik (targXYZ, Mode, c = [0.087, 0.111, 0.078, 0.020])
+    jAng = ik (targXYZ, Mode)
     print(jAng)
+    print(type(jAng))
     
