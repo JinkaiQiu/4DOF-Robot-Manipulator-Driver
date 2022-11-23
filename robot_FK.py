@@ -1,9 +1,13 @@
 import numpy as np
 import math
 
-def fk (jAng, c):
+def fk (jAng):
     # input jAng = [t1,t2,t3,t4], 0 < t1,t2,t3,t4 < 4095
+    
+    jAng = np.array(jAng)
+    jAng = (jAng - 2048) / 2048 * math.pi
 
+    global c
     # input c = [L1, L2, L3, L4] from main.py: geometric parameters of the Manipulator
     d1 = c[0]; a2 = c[1]; a3 = c[2]; a4 = c[3]
     # Assume jAng is angles within the range of [-pi, pi] <--> [0, 4095] ?
@@ -35,9 +39,10 @@ def fk (jAng, c):
 
 # Test Only
 if __name__ == '__main__':
-
-    jAng = [math.pi/6, -math.pi/2, math.pi/4, -math.pi]
-    pos = fk (jAng, c = [0.087, 0.111, 0.078, 0.020])
+    c = [0.087, 0.111, 0.078, 0.020] # Length Parameters of Manipulator
+    jAng = [2389, 1024, 2560, 0] # jAng = [math.pi/6, -math.pi/2, math.pi/4, -math.pi]
+    pos = fk (jAng)
     print(pos)
+    print(type(pos))
 
     
