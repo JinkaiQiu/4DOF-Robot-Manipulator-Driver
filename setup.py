@@ -99,6 +99,9 @@ for ID in DXL_ID:
 
 
 # Robot Initialization
+
+c = [0.087, 0.111, 0.078, 0.020] # Length Parameters of Manipulator
+
 cur_jAng = [90, 90, 90, 90]
 target_jAng = [45, 45, 45, 45]
 ball2robCali = 10  # calibration constant from pixel to m
