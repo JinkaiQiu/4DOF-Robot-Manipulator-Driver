@@ -1,10 +1,14 @@
 import numpy as np
 import math
 
-def fk (jAng, c):
-    # input jAng = [t1,t2,t3,t4], 0 < t1,t2,t3,t4 < 4095
-
-    # input c = [L1, L2, L3, L4] from main.py: geometric parameters of the Manipulator
+def fk (jAng):
+    # input jAng = [t1,t2,t3,t4] is a list. 0 < t1,t2,t3,t4 < 4095
+    
+    jAng = np.array(jAng)
+    jAng = (jAng - 2048) / 2048 * math.pi
+    
+    global c
+    # global c = [L1, L2, L3, L4] from main.py: geometric parameters of the Manipulator
     d1 = c[0]; a2 = c[1]; a3 = c[2]; a4 = c[3]
     # Assume jAng is angles within the range of [-pi, pi] <--> [0, 4095] ?
     theta1 = jAng[0]; theta2 = jAng[1]; theta3 = jAng[2]; theta4 = jAng[3]
@@ -29,15 +33,16 @@ def fk (jAng, c):
 
     # output pos  = [x,y,z] --> end effector
     pos_temp = To[0:3,3]
-    # keep only 4 digits
-    pos = [float('{:.4f}'.format(i)) for i in pos_temp]
+    # keep only 3 digits
+    pos = [float('{:.3f}'.format(i)) for i in pos_temp]
     return pos
+
 
 # Test Only
 if __name__ == '__main__':
-
+    c = [0.087, 0.111, 0.078, 0.020] # Length Parameters of Manipulator
     jAng = [math.pi/6, -math.pi/2, math.pi/4, -math.pi]
     pos = fk (jAng, c = [0.087, 0.111, 0.078, 0.020])
     print(pos)
-
+    print(type(pos))
     
