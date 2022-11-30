@@ -58,9 +58,9 @@ def ik (targXYZ, Mode):
 
 # Test Only
 if __name__ == '__main__':
-    c = [0.087, 0.111, 0.078, 0.020] # Length Parameters of Manipulator
+    c = [0.085, 0.130, 0.130, 0.004] # Length Parameters of Manipulator (verified already)
     Mode = 1 # or 2
-    targXYZ = np.array([0.15, 0, 0.08])
+    targXYZ = np.array([0.15, 0, 0.08]) # Attention: workspace limit
     jAng = ik (targXYZ, Mode)
     print(jAng)
     print(type(jAng))
