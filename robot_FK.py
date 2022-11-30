@@ -40,8 +40,8 @@ def fk (jAng):
 
 # Test Only
 if __name__ == '__main__':
-    c = [0.087, 0.111, 0.078, 0.020] # Length Parameters of Manipulator
-    jAng = [math.pi/6, -math.pi/2, math.pi/4, -math.pi]
+    c = [0.085, 0.130, 0.130, 0.004] # Length Parameters of Manipulator (verified already)
+    jAng = [2048, 3072, 2048, 2048] # jAng = [0, pi/2, 0, 0] as home position
     pos = fk (jAng)
     print(pos)
     print(type(pos))
