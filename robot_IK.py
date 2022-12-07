@@ -46,8 +46,9 @@ def ik (targXYZ, Mode):
     else:
         print('Unauthorized Mode?')
 
-
-    jAng_temp = np.array([theta1, theta2, theta3, theta4])
+    jAng_temp = np.array([theta1, theta2 - math.pi / 2, theta3, theta4])
+    # Motor 2 has an offset of -90 degrees in setup
+    
     jAng = np.round(jAng_temp / math.pi * 2048 + 2048)
     # output jAng = [t1, t2, t3, t4],  0 < t1,t2,t3,t4 < 4095
     jAng = jAng.tolist()
