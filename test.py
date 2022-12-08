@@ -43,7 +43,7 @@ DXL3_ID                     = 3                 # Dynamixel#1 ID : 3
 DXL4_ID                     = 4                 # Dynamixel#1 ID : 4
 DXL_ID = [DXL1_ID, DXL2_ID, DXL3_ID, DXL4_ID]
 
-DEVICENAME                  = 'COM3'
+DEVICENAME                  = 'COM5'
 
 TORQUE_ENABLE               = 1                 # Value for enabling the torque
 TORQUE_DISABLE              = 0                 # Value for disabling the torque
@@ -100,17 +100,36 @@ for ID in DXL_ID:
 param_jAng = [[0] * 4] * len(DXL_ID) # 2D array for position val for each joint
 cur_jAng = [90, 90, 90, 90]
 
+a=2048
+flag=1
+
+### Traj
+# N=len
 
 while 1:
-    if getch() == chr(0x1b): # ESC to break loop
-        break
 
-    goal = input("Please enter your goal:")
-    goal = goal.split(" ")
-    for j in range(4):
-        goal[j] = int(goal[j])
-    # target_jAng = goal
-    target_jAng = goal
+    # if getch() == chr(0x1b): # ESC to break loop
+    #     break
+    
+    if(flag==1):
+
+    #     # goal = [2048, 3072, 2048, 2048] 
+    #     # goal = goal.split(" ")
+    #     # for j in range(4):
+    #     #     goal[j] = int(goal[j])
+    #     # target_jAng = goal
+        target_jAng = [2048, 3072, 2048, 2048]  # Home Position
+        flag = 2
+
+    else:
+
+        if(a<2600):
+            a=a+10
+        else:
+            break
+        target_jAng= [2048,3072,2048,a] # IK(x,y,z)
+
+
 
     for i in range(len(DXL_ID)):
         # format each joint angle to byte array
@@ -118,6 +137,8 @@ while 1:
         param_jAng[i] = [DXL_LOBYTE(DXL_LOWORD(ang)), DXL_HIBYTE(DXL_LOWORD(ang)), DXL_LOBYTE(DXL_HIWORD(ang)), DXL_HIBYTE(DXL_HIWORD(ang))]
         # Add Dynamixel#1 goal position value to the Bulkwrite parameter storage
         dxl_addparam_result = groupBulkWrite.addParam(DXL_ID[i], ADDR_GOAL_POSITION, LEN_GOAL_POSITION, param_jAng[i])
+        
+
         if dxl_addparam_result != True:
             print("[ID:%03d] groupBulkWrite addparam failed" % DXL_ID[i])
             quit()
@@ -126,6 +147,8 @@ while 1:
     # Check results
     if dxl_comm_result != COMM_SUCCESS:
         print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
+    
+    print('Action Done!')
 
     # Clear bulkwrite parameter storage
     groupBulkWrite.clearParam()
@@ -148,7 +171,10 @@ while 1:
         for i in range(len(DXL_ID)):  # check if all joints already moved to position
             if abs(cur_jAng[i] - target_jAng[i]) < DXL_MOVING_STATUS_THRESHOLD:
                 state = state + 1
+            print(i)
+                
         if state == len(DXL_ID):
+            print('Reading Done!')
             break
     # ball_last_pos = ball_pos
     # end_t = time.time()
@@ -173,5 +199,20 @@ if dxl_comm_result != COMM_SUCCESS:
 elif dxl_error != 0:
     print("%s" % packetHandler.getRxPacketError(dxl_error))
 
+# Disable Dynamixel#3 Torque
+dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL3_ID, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
+if dxl_comm_result != COMM_SUCCESS:
+    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
+elif dxl_error != 0:
+    print("%s" % packetHandler.getRxPacketError(dxl_error))
+
+# Disable Dynamixel#4 Torque
+dxl_comm_result, dxl_error = packetHandler.write1ByteTxRx(portHandler, DXL4_ID, ADDR_TORQUE_ENABLE, TORQUE_DISABLE)
+if dxl_comm_result != COMM_SUCCESS:
+    print("%s" % packetHandler.getTxRxResult(dxl_comm_result))
+elif dxl_error != 0:
+    print("%s" % packetHandler.getRxPacketError(dxl_error))
+
+
 # Close port
-portHandler.closePort()
+portHandler.closePort()  
