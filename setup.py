@@ -99,7 +99,7 @@ for ID in DXL_ID:
 
 
 # Robot Initialization
-c = np.array([0.085, 0.130, 0.130, 0.004]) # Length Parameters of Manipulator (verified already)
+c = np.array([0.085, 0.130, 0.130, 0.060]) # Length Parameters of Manipulator (verified already)
 home_jAng = [2048, 3072, 2048, 2048] # jAng = [0, pi/2, 0, 0] as home position
 
 cur_jAng = [90, 90, 90, 90]
