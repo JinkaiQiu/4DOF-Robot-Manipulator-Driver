@@ -1,20 +1,18 @@
 import numpy as np
-import math
 
 def fk (jAng):
-    # input jAng = [t1,t2,t3,t4] is a list. 0 < t1,t2,t3,t4 < 4095
+    # input jAng = [t1,t2,t3,t4], 0 < t1,t2,t3,t4 < 4095
     
     jAng = np.array(jAng)
-    jAng = (jAng - 2048) / 2048 * math.pi
-    
+    jAng = (jAng - 2048) / 2048 * np.pi
+
     global c
-    # global c = [L1, L2, L3, L4] from main.py: geometric parameters of the Manipulator
     d1 = c[0]; a2 = c[1]; a3 = c[2]; a4 = c[3]
     # Assume jAng is angles within the range of [-pi, pi] <--> [0, 4095] ?
     theta1 = jAng[0]; theta2 = jAng[1]; theta3 = jAng[2]; theta4 = jAng[3]
 
     # DH parameters
-    DH = np.array([[0, 0, d1, theta1], [0, math.pi/2, 0, theta2], [a2, 0, 0, theta3], \
+    DH = np.array([[0, 0, d1, theta1], [0, np.pi/2, 0, theta2], [a2, 0, 0, theta3], \
         [a3, 0, 0, theta4], [a4, 0, 0, 0]])
     a = DH[:,0]; alpha = DH[:,1]; d = DH[:,2]; theta = DH[:,3]
 
@@ -23,26 +21,26 @@ def fk (jAng):
 
     for j in range(5):
     
-        Ti = np.array([[math.cos(theta[j]), -math.sin(theta[j]), 0, a[j]],
-            [math.sin(theta[j])*math.cos(alpha[j]), math.cos(theta[j])*math.cos(alpha[j]), \
-            -math.sin(alpha[j]), -math.sin(alpha[j])*d[j]],
-            [math.sin(theta[j])*math.sin(alpha[j]), math.cos(theta[j])*math.sin(alpha[j]), \
-            math.cos(alpha[j]), math.cos(alpha[j])*d[j]],
+        Ti = np.array([[np.cos(theta[j]), -np.sin(theta[j]), 0, a[j]],
+            [np.sin(theta[j])*np.cos(alpha[j]), np.cos(theta[j])*np.cos(alpha[j]), \
+            -np.sin(alpha[j]), -np.sin(alpha[j])*d[j]],
+            [np.sin(theta[j])*np.sin(alpha[j]), np.cos(theta[j])*np.sin(alpha[j]), \
+            np.cos(alpha[j]), np.cos(alpha[j])*d[j]],
             [0, 0, 0, 1]])
         To = np.dot(To, Ti)
 
     # output pos  = [x,y,z] --> end effector
     pos_temp = To[0:3,3]
-    # keep only 3 digits
-    pos = [float('{:.3f}'.format(i)) for i in pos_temp]
+    # keep only 4 digits
+    pos = [float('{:.4f}'.format(i)) for i in pos_temp]
     return pos
-
 
 # Test Only
 if __name__ == '__main__':
-    c = [0.085, 0.130, 0.130, 0.004] # Length Parameters of Manipulator (verified already)
-    jAng = [2048, 3072, 2048, 2048] # jAng = [0, pi/2, 0, 0] as home position
+    c = [0.10, 0.13, 0.13, 0.06] # Length Parameters of Manipulator
+    jAng = [2048, 3072, 2048, 1024] # jAng = [0, pi/2, 0, 0] as home position
     pos = fk (jAng)
     print(pos)
     print(type(pos))
+
     
