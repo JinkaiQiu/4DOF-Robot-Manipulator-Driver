@@ -8,6 +8,7 @@ def ik (targXYZ, Mode):
     x = targXYZ[0]; y = targXYZ[1]; z = targXYZ[2]
 
     if Mode == 1: # Horizontal Case
+        ####### Geometric
         theta1 = math.atan2(y, x)
         r1 = math.sqrt(x ** 2 + y ** 2) - L4
         r2 = math.sqrt(r1 ** 2 + (z - L1) ** 2)
@@ -24,6 +25,21 @@ def ik (targXYZ, Mode):
         theta2 = alpha + beta
 
         theta4 = - theta2 - theta3
+        
+        ###################### Algebraic
+        theta1 = math.atan2(y,x)
+    
+        c3 = (x^2 + y^2 + z^2 + L1^2 + L4^2 - L2^2 - L3^2 - 2 * z * L1 - 2 * L4 * np.sqrt(x^2 + y^2)) / (2 * L2 * L3)
+        s3 = -np.sqrt(1 - c3^2); # Two Solns: s3 = sqrt(1 - c3^2)
+        theta3 = math.atan2(s3,c3)
+        
+        c2 = (L2 + L3 * c3) * (np.sqrt(x^2 + y^2) - L4) + L3 * s3 * (z - L1)
+        s2 = (L2 + L3 * c3) * (z - L1) - L3 * s3 * (np.sqrt(x^2 + y^2) - L4)
+        theta2 = math.atan2(s2,c2)
+        
+        theta4 = - theta2 - theta3
+
+        ########################
 
     elif Mode == 2: # Vertical Case
         theta1 = math.atan2(y, x)
