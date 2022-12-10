@@ -4,14 +4,16 @@ clc;close all;clear;
 global c
 % Main
 % Parameter Claim
-L1 = 0.087; % m
-L2 = 0.111; % m
-L3 = 0.078; % m
-L4 = 0.020; % m
+L1 = 0.10; % m
+L2 = 0.13; % m
+L3 = 0.13; % m
+L4 = 0.06; % m
 c = [L1 L2 L3 L4]; % parameters specification
 
 % Mode = 1; %Mode 1: Horizontal Tool
+% home = [L4,0,L1+L2+L3].';
 Mode = 2; %Mode 2: Vertical Tool
+home = [L3,0,L1+L2-L4].';
 
 % Trajectory Cartesian Space
 switch Mode
@@ -27,6 +29,10 @@ switch Mode
         y = center(2) + a * cos(t) * u_unit(2) + b * sin(t) * v_unit(2);
         z = center(3) + a * cos(t) * u_unit(3) + b * sin(t) * v_unit(3);
         
+        P_start = [x(1) y(1) z(1)].';
+        [x1, y1, z1] = homegoto(P_start,home,N);
+        x = [x1 x]; y = [y1 y]; z = [z1 z];
+        
     case 2
         N = 101;
         t = linspace(0,2*pi,N);
@@ -37,6 +43,10 @@ switch Mode
         x = center(1) + a * sin(t) * n_unit(1);
         y = center(2) + a * sin(t) * n_unit(2);
         z = center(3) + a * sin(t) * n_unit(3);
+        
+        P_start = [x(1) y(1) z(1)].';
+        [x1, y1, z1] = homegoto(P_start,home,N);
+        x = [x1 x]; y = [y1 y]; z = [z1 z];
 
 end
 
